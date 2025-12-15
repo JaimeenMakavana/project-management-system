@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { Task } from "@/graphql/types";
 import {
   Table,
@@ -9,6 +10,7 @@ import {
   TableCell,
 } from "@/components/ui/Table";
 import { StatusBadge, PriorityBadge } from "@/components/ui/Badge";
+import { MessageCircle } from "lucide-react";
 
 interface TaskTableProps {
   tasks: Task[];
@@ -72,7 +74,22 @@ export function TaskTable({ tasks, onTaskClick }: TaskTableProps) {
                     : "-"}
                 </TableCell>
                 <TableCell className="text-right text-[var(--text-secondary)]">
-                  {task.commentCount}
+                  <div className="flex items-center justify-end gap-2">
+                    <span>{task.commentCount}</span>
+                    {task.commentCount > 0 && (
+                      <Link
+                        href={`/tasks/${task.id}/comments`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center rounded-md border border-[var(--border-subtle)] px-2 py-1 text-xs text-[var(--text-secondary)] hover:bg-[var(--bg-main)] hover:text-[var(--text-primary)]"
+                      >
+                        <MessageCircle
+                          className="w-3 h-3 mr-1"
+                          strokeWidth={1}
+                        />
+                        View
+                      </Link>
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             ))

@@ -97,7 +97,7 @@ export function Select({
         </label>
       )}
       <select
-        className={`w-full px-4 py-2 border bg-[var(--bg-card)] text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] focus:border-transparent transition-colors ${
+        className={`w-fit min-w-[200px] px-4 py-2 border bg-[var(--bg-card)] text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] focus:border-transparent transition-colors ${
           error ? "border-red-500" : "border-[var(--border-subtle)]"
         } ${className}`}
         {...props}

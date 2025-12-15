@@ -15,7 +15,7 @@ interface HeaderProps {
 export function Header({ title, subtitle, actions }: HeaderProps) {
   return (
     <TooltipProvider>
-      <div className="bg-[var(--bg-card)] border-b border-[var(--border-subtle)] px-4 py-3 sticky top-0 z-10">
+      <div className="bg-[var(--bg-card)] border-b border-[var(--border-subtle)] px-4 py-3 sticky top-0 z-10 h-[65px] flex items-center">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="min-w-0">
             <h1 className="text-lg md:text-xl font-bold text-[var(--text-primary)] break-words">

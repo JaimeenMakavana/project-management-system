@@ -47,7 +47,7 @@ export default function ProjectsPage() {
         }
       />
 
-      <div className="p-8">
+      <div className="p-4">
         {/* Filters */}
         <div className="mb-6">
           <Select
