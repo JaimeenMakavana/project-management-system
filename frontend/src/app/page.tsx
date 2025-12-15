@@ -10,23 +10,6 @@ import {
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-[var(--bg-main)]">
-      {/* Header */}
-      <header className="bg-[var(--bg-card)] border-b border-[var(--border-subtle)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[var(--bg-card-dark)] rounded-lg flex items-center justify-center">
-              <LayoutDashboard
-                className="w-6 h-6 text-[var(--text-primary)]"
-                strokeWidth={1}
-              />
-            </div>
-            <h1 className="text-lg sm:text-xl font-bold text-[var(--text-primary)]">
-              Project Manager
-            </h1>
-          </div>
-        </div>
-      </header>
-
       {/* Hero Section */}
       <main className="flex-1 flex items-center justify-center">
         <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 text-center">
@@ -100,13 +83,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="bg-[var(--bg-card)] border-t border-[var(--border-subtle)] py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-[var(--text-secondary)] text-sm">
-          © 2025 Project Management System. Built with passion.
-        </div>
-      </footer>
     </div>
   );
 }
