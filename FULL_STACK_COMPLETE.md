@@ -4,7 +4,7 @@
 
 A complete **multi-tenant project management system** built with modern technologies:
 - **Backend**: Django 5.2 + GraphQL (Graphene)
-- **Frontend**: Next.js 16 + React 19 + TypeScript
+- **Frontend**: Next.js 15 (App Router) + React 19 + TypeScript
 - **Database**: PostgreSQL
 - **Styling**: TailwindCSS
 
@@ -338,7 +338,7 @@ All documentation is comprehensive and ready to use:
 4. **GraphQL**: Modern API with flexible queries
 
 ### Frontend
-1. **App Router**: Next.js 16 modern routing
+1. **App Router**: Next.js 15 App Router
 2. **Server + Client Components**: Optimal performance
 3. **Feature-Based Organization**: Scalable component structure
 4. **Apollo Client**: Powerful GraphQL client with caching
@@ -461,7 +461,7 @@ This is a **complete, full-stack application** with:
 
 **Technologies Used:**
 - Django 5.2 + Graphene
-- Next.js 16 + React 19
+- Next.js 15 + React 19
 - TypeScript 5
 - Apollo Client 3
 - TailwindCSS 3

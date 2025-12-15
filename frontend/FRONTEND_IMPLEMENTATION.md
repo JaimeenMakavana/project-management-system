@@ -5,7 +5,7 @@
 ### 1. Tech Stack
 
 All requirements implemented:
-- **Next.js 16** (App Router)
+- **Next.js 15** (App Router)
 - **React 19** (latest features)
 - **TypeScript** (strict mode)
 - **Apollo Client** (GraphQL integration)
@@ -377,7 +377,7 @@ frontend/src/
 
 ## 📚 Technologies Used
 
-- **Next.js 16**: App Router, Server Components
+- **Next.js 15**: App Router, Server Components
 - **React 19**: Latest features
 - **TypeScript 5**: Type safety
 - **Apollo Client 3**: GraphQL client
@@ -389,7 +389,7 @@ frontend/src/
 **Frontend Status: 100% COMPLETE** ✅
 
 All project requirements have been fully implemented:
-- ✅ Next.js 16 with App Router
+- ✅ Next.js 15 with App Router
 - ✅ React 19 components
 - ✅ TypeScript throughout
 - ✅ Apollo Client integration

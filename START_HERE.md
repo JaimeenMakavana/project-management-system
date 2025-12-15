@@ -82,7 +82,20 @@ cd backend
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env      # Edit with your database credentials
+
+# Create .env file (or copy from backend/.env.template if present)
+cat > .env << EOL
+DB_NAME=project_management_db
+DB_USER=pm_user
+DB_PASSWORD=your_secure_password
+DB_HOST=localhost
+DB_PORT=5432
+SECRET_KEY=django-insecure-change-in-production
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+CORS_ALLOWED_ORIGINS=http://localhost:3000
+EOL
+
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
@@ -97,7 +110,12 @@ Open a new terminal:
 ```bash
 cd frontend
 npm install
-cp .env.local.example .env.local
+
+# Create .env.local
+cat > .env.local << EOL
+NEXT_PUBLIC_API_URL=http://localhost:8000/graphql
+EOL
+
 npm run dev
 ```
 
