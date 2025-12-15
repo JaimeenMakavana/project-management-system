@@ -11,7 +11,7 @@ export function useWalkthrough() {
   useEffect(() => {
     // Check if user has seen the walkthrough
     const seen = localStorage.getItem(WALKTHROUGH_STORAGE_KEY);
-    
+
     if (!seen) {
       // First time user - show walkthrough after a brief delay for better UX
       setTimeout(() => {
@@ -65,4 +65,3 @@ export function useWalkthrough() {
     resetWalkthrough,
   };
 }
-
