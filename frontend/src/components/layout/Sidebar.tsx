@@ -8,11 +8,16 @@ import {
   ListChecks,
   FolderKanban,
   Building2,
+  PlayCircle,
 } from "lucide-react";
 import { OrganizationSwitcher } from "@/components/features/organization/OrganizationSwitcher";
 import { SheetClose } from "@/components/ui/sheet";
 
-export function Sidebar() {
+interface SidebarProps {
+  onOpenWalkthrough?: () => void;
+}
+
+export function Sidebar({ onOpenWalkthrough }: SidebarProps) {
   const pathname = usePathname();
 
   const navigation = [
@@ -66,6 +71,19 @@ export function Sidebar() {
           );
         })}
       </nav>
+
+      {/* Help Section */}
+      <div className="px-4 py-4 border-t border-[var(--border-subtle)]">
+        <SheetClose asChild>
+          <button
+            onClick={onOpenWalkthrough}
+            className="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors text-[var(--text-secondary)] hover:bg-[var(--bg-main)] hover:text-[var(--text-primary)] w-full"
+          >
+            <PlayCircle className="w-5 h-5" strokeWidth={1} />
+            <span className="font-medium">Help & Walkthrough</span>
+          </button>
+        </SheetClose>
+      </div>
     </div>
   );
 }
