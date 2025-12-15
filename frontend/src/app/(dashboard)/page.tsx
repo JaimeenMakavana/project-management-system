@@ -58,7 +58,9 @@ export default function DashboardHome() {
           <>
             {data.projects.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-gray-600 mb-4">No projects yet</p>
+                <p className="text-[var(--text-secondary)] mb-4">
+                  No projects yet
+                </p>
                 <Link href="/projects/new">
                   <Button>Create Your First Project</Button>
                 </Link>

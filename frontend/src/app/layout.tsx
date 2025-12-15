@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ApolloProviderWrapper } from "@/lib/apollo-provider";
+import { Red_Hat_Display } from "next/font/google";
+
+const redHatDisplay = Red_Hat_Display({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Project Management System",
@@ -14,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased h-dvh">
+      <body className={`${redHatDisplay.className} antialiased h-dvh`}>
         <ApolloProviderWrapper>{children}</ApolloProviderWrapper>
       </body>
     </html>

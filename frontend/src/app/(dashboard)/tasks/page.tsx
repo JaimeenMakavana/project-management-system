@@ -123,7 +123,7 @@ export default function TasksPage() {
               onChange={(e) =>
                 setStatusFilter(e.target.value as TaskStatus | "ALL")
               }
-              className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-card)] px-3 py-2 text-sm text-[var(--text-secondary)] shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] focus:border-[var(--accent-blue)]"
             >
               <option value="ALL">All Statuses</option>
               <option value="TODO">To Do</option>
@@ -136,7 +136,7 @@ export default function TasksPage() {
               onChange={(e) =>
                 setPriorityFilter(e.target.value as TaskPriority | "ALL")
               }
-              className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-card)] px-3 py-2 text-sm text-[var(--text-secondary)] shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] focus:border-[var(--accent-blue)]"
             >
               <option value="ALL">All Priorities</option>
               <option value="LOW">Low</option>
@@ -207,37 +207,41 @@ export default function TasksPage() {
 
               {selectedTask.description && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                  <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-1">
                     Description
                   </h3>
-                  <p className="text-gray-700 whitespace-pre-wrap">
+                  <p className="text-[var(--text-secondary)] whitespace-pre-wrap">
                     {selectedTask.description}
                   </p>
                 </div>
               )}
 
               <div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-1">
                   Project
                 </h3>
-                <p className="text-gray-700">{selectedTask.project.name}</p>
+                <p className="text-[var(--text-secondary)]">
+                  {selectedTask.project.name}
+                </p>
               </div>
 
               {selectedTask.assigneeEmail && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                  <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-1">
                     Assignee
                   </h3>
-                  <p className="text-gray-700">{selectedTask.assigneeEmail}</p>
+                  <p className="text-[var(--text-secondary)]">
+                    {selectedTask.assigneeEmail}
+                  </p>
                 </div>
               )}
 
               {selectedTask.dueDate && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                  <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-1">
                     Due Date
                   </h3>
-                  <p className="text-gray-700">
+                  <p className="text-[var(--text-secondary)]">
                     {new Date(selectedTask.dueDate).toLocaleDateString(
                       "en-US",
                       {

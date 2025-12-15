@@ -60,7 +60,7 @@ export const SheetContent = React.forwardRef<
       <SheetPrimitive.Content
         ref={ref}
         className={cn(
-          "fixed z-50 bg-white shadow-lg focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out",
+          "fixed z-50 bg-[var(--bg-card)] shadow-lg focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out",
           "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left",
           "md:hidden",
           sideClasses[side as SheetSide],
@@ -68,12 +68,12 @@ export const SheetContent = React.forwardRef<
         )}
         {...props}
       >
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
-          <span className="text-sm font-semibold text-gray-900">Menu</span>
+        <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border-subtle)]">
+          <span className="text-sm font-semibold text-[var(--text-primary)]">Menu</span>
           <SheetPrimitive.Close asChild>
             <button
               type="button"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 bg-white"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--text-secondary)] hover:bg-[var(--badge-bg)] hover:text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--border-subtle)] focus:ring-offset-2 bg-[var(--bg-card)]"
             >
               <svg
                 className="h-4 w-4"

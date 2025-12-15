@@ -14,15 +14,15 @@ export function ProjectCard({ project }: ProjectCardProps) {
     <Card hover className="h-full flex flex-col">
       <CardBody className="flex-1">
         <div className="flex items-start justify-between mb-3">
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 className="text-lg font-semibold text-[var(--text-primary)]">
             {project.name}
           </h3>
           <StatusBadge status={project.status} />
         </div>
-        <p className="text-gray-600 text-sm line-clamp-2 mb-4">
+        <p className="text-[var(--text-secondary)] text-sm line-clamp-2 mb-4">
           {project.description || "No description available"}
         </p>
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-[var(--text-secondary)]">
           {project.taskCount} {project.taskCount === 1 ? "Task" : "Tasks"}
         </div>
       </CardBody>

@@ -87,13 +87,16 @@ export default function OrganizationsPage() {
         {/* Organizations Grid */}
         {organizations.length === 0 ? (
           <Card className="p-12 text-center">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Building2 className="w-8 h-8 text-gray-400" strokeWidth={1} />
+            <div className="w-16 h-16 bg-[var(--badge-bg)] rounded-full flex items-center justify-center mx-auto mb-4">
+              <Building2
+                className="w-8 h-8 text-[var(--text-secondary)]"
+                strokeWidth={1}
+              />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
               No organizations yet
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-[var(--text-secondary)] mb-6">
               Create your first organization to get started.
             </p>
             <Button
@@ -114,48 +117,50 @@ export default function OrganizationsPage() {
                   key={org.id}
                   className={`p-6 cursor-pointer transition-all duration-200 hover:shadow-lg ${
                     isSelected
-                      ? "ring-2 ring-purple-500 bg-purple-50/50"
-                      : "hover:border-gray-300"
+                      ? "ring-2 ring-[var(--accent-purple)] bg-[var(--accent-purple)]/10"
+                      : "hover:border-[var(--border-subtle)]"
                   }`}
                   onClick={() => handleSelectOrganization(parseInt(org.id, 10))}
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
-                      <span className="text-white font-semibold text-base">
+                    <div className="w-10 h-10 rounded-xl bg-[var(--accent-purple)] flex items-center justify-center">
+                      <span className="text-[var(--text-inverse)] font-semibold text-base">
                         {org.name.charAt(0).toUpperCase()}
                       </span>
                     </div>
                     {isSelected && (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--accent-purple)]/10 text-[var(--accent-purple)]">
                         Active
                       </span>
                     )}
                   </div>
 
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                  <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-1">
                     {org.name}
                   </h3>
-                  <p className="text-sm text-gray-500 mb-4">@{org.slug}</p>
+                  <p className="text-sm text-[var(--text-secondary)] mb-4">
+                    @{org.slug}
+                  </p>
 
-                  <div className="flex items-center text-sm text-gray-600 mb-3">
+                  <div className="flex items-center text-sm text-[var(--text-secondary)] mb-3">
                     <Mail
-                      className="w-4 h-4 mr-2 text-gray-400"
+                      className="w-4 h-4 mr-2 text-[var(--text-secondary)]"
                       strokeWidth={1}
                     />
                     {org.contactEmail}
                   </div>
 
-                  <div className="flex items-center space-x-4 pt-4 border-t border-gray-100">
-                    <div className="flex items-center text-sm text-gray-600">
+                  <div className="flex items-center space-x-4 pt-4 border-t border-[var(--border-subtle)]">
+                    <div className="flex items-center text-sm text-[var(--text-secondary)]">
                       <FolderKanban
-                        className="w-4 h-4 mr-1.5 text-gray-400"
+                        className="w-4 h-4 mr-1.5 text-[var(--text-secondary)]"
                         strokeWidth={1}
                       />
                       {org.projectCount} projects
                     </div>
-                    <div className="flex items-center text-sm text-green-600">
+                    <div className="flex items-center text-sm text-[var(--accent-lime)]">
                       <CheckCircle2
-                        className="w-4 h-4 mr-1.5 text-green-500"
+                        className="w-4 h-4 mr-1.5 text-[var(--accent-lime)]"
                         strokeWidth={1}
                       />
                       {org.activeProjectCount} active

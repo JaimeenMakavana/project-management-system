@@ -31,11 +31,11 @@ export function OrganizationSwitcher() {
 
   if (loading || !organization) {
     return (
-      <div className="px-6 py-5 border-b border-gray-200">
+      <div className="px-6 py-5 border-b border-[var(--border-subtle)]">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gray-200 rounded-lg animate-pulse" />
+          <div className="w-10 h-10 bg-[var(--badge-bg)] rounded-lg animate-pulse" />
           <div className="flex-1">
-            <div className="h-4 bg-gray-200 rounded w-24 animate-pulse" />
+            <div className="h-4 bg-[var(--badge-bg)] rounded w-24 animate-pulse" />
           </div>
         </div>
       </div>
@@ -49,26 +49,28 @@ export function OrganizationSwitcher() {
 
   return (
     <div
-      className="relative px-6 py-2 border-b border-gray-200"
+      className="relative px-6 py-2 border-b border-[var(--border-subtle)]"
       ref={dropdownRef}
     >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center space-x-3 hover:bg-gray-50 -mx-2 px-2 py-1 rounded-lg transition-colors"
+        className="w-full flex items-center space-x-3 hover:bg-[var(--bg-main)] -mx-2 px-2 py-1 rounded-lg transition-colors"
       >
-        <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span className="text-white font-bold">
+        <div className="w-10 h-10 bg-[var(--accent-purple)] rounded-lg flex items-center justify-center flex-shrink-0">
+          <span className="text-[var(--text-inverse)] font-bold">
             {organization.name.charAt(0).toUpperCase()}
           </span>
         </div>
         <div className="flex-1 text-left min-w-0">
-          <h2 className="text-sm font-semibold text-gray-900 truncate">
+          <h2 className="text-sm font-semibold text-[var(--text-primary)] truncate">
             {organization.name}
           </h2>
-          <p className="text-xs text-gray-500 truncate">{organization.slug}</p>
+          <p className="text-xs text-[var(--text-secondary)] truncate">
+            {organization.slug}
+          </p>
         </div>
         <svg
-          className={`w-4 h-4 text-gray-400 transition-transform ${
+          className={`w-4 h-4 text-[var(--text-secondary)] transition-transform ${
             isOpen ? "rotate-180" : ""
           }`}
           fill="none"
@@ -86,7 +88,7 @@ export function OrganizationSwitcher() {
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute left-4 right-4 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50 max-h-64 overflow-y-auto">
+        <div className="absolute left-4 right-4 mt-2 bg-[var(--bg-card)] rounded-lg shadow-lg border border-[var(--border-subtle)] z-50 max-h-64 overflow-y-auto">
           <div className="py-1">
             {organizations.map((org: Organization) => {
               const isSelected =
@@ -96,24 +98,26 @@ export function OrganizationSwitcher() {
                 <button
                   key={org.id}
                   onClick={() => handleSelect(parseInt(org.id, 10))}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors ${
-                    isSelected ? "bg-purple-50" : ""
+                  className={`w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-[var(--bg-main)] transition-colors ${
+                    isSelected ? "bg-[var(--accent-purple)]/10" : ""
                   }`}
                 >
-                  <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <span className="text-white font-semibold text-sm">
+                  <div className="w-8 h-8 bg-[var(--accent-purple)] rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span className="text-[var(--text-inverse)] font-semibold text-sm">
                       {org.name.charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
+                    <p className="text-sm font-medium text-[var(--text-primary)] truncate">
                       {org.name}
                     </p>
-                    <p className="text-xs text-gray-500 truncate">{org.slug}</p>
+                    <p className="text-xs text-[var(--text-secondary)] truncate">
+                      {org.slug}
+                    </p>
                   </div>
                   {isSelected && (
                     <svg
-                      className="w-5 h-5 text-purple-600"
+                      className="w-5 h-5 text-[var(--accent-purple)]"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -130,10 +134,10 @@ export function OrganizationSwitcher() {
           </div>
 
           {/* Add new organization link */}
-          <div className="border-t border-gray-100">
+          <div className="border-t border-[var(--border-subtle)]">
             <a
               href="/organizations"
-              className="flex items-center space-x-3 px-4 py-3 text-sm text-purple-600 hover:bg-purple-50 transition-colors"
+              className="flex items-center space-x-3 px-4 py-3 text-sm text-[var(--accent-purple)] hover:bg-[var(--accent-purple)]/10 transition-colors"
             >
               <svg
                 className="w-5 h-5"

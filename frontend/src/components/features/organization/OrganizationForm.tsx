@@ -125,7 +125,7 @@ export function OrganizationForm({
         </div>
       )}
 
-      <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
+      <div className="flex items-center justify-end space-x-3 pt-4 border-t border-[var(--border-subtle)]">
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel

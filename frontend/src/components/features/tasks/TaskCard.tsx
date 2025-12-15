@@ -15,7 +15,7 @@ export function TaskCard({ task, onClick }: TaskCardProps) {
     <Card hover className="cursor-pointer" onClick={onClick}>
       <CardBody>
         <div className="flex items-start justify-between mb-2">
-          <h4 className="font-medium text-gray-900 flex-1 mr-2">
+          <h4 className="font-medium text-[var(--text-primary)] flex-1 mr-2">
             {task.title}
           </h4>
           <StatusBadge status={task.status} />
@@ -28,12 +28,12 @@ export function TaskCard({ task, onClick }: TaskCardProps) {
         )}
 
         {task.description && (
-          <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+          <p className="text-sm text-[var(--text-secondary)] line-clamp-2 mb-3">
             {task.description}
           </p>
         )}
 
-        <div className="flex items-center justify-between text-xs text-gray-500">
+        <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
           {task.assigneeEmail && (
             <div className="flex items-center space-x-1">
               <svg
@@ -54,7 +54,7 @@ export function TaskCard({ task, onClick }: TaskCardProps) {
           )}
 
           {task.dueDate && (
-            <div className="flex items-center space-x-1 text-gray-500">
+            <div className="flex items-center space-x-1 text-[var(--text-secondary)]">
               <svg
                 className="w-4 h-4"
                 fill="none"

@@ -11,14 +11,16 @@ export default function DashboardLayout({
 }) {
   return (
     <Sheet>
-      <div className="flex h-screen bg-gray-50 overflow-hidden">
+      <div className="flex h-screen bg-[var(--bg-main)] overflow-hidden">
         {/* Mobile top bar */}
-        <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between bg-white border-b border-gray-200 px-4 py-3 md:hidden">
+        <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between bg-[var(--bg-card)] border-b border-[var(--border-subtle)] px-4 py-3 md:hidden">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center">
-              <span className="text-sm font-bold text-white">PM</span>
+            <div className="w-8 h-8 rounded-lg bg-[var(--bg-card-dark)] flex items-center justify-center">
+              <span className="text-sm font-bold text-[var(--text-inverse)]">
+                PM
+              </span>
             </div>
-            <span className="text-base font-semibold text-gray-900">
+            <span className="text-base font-semibold text-[var(--text-primary)]">
               Dashboard
             </span>
           </div>
@@ -26,7 +28,7 @@ export default function DashboardLayout({
             <button
               type="button"
               aria-label="Open navigation menu"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[var(--border-subtle)] bg-[var(--bg-card)] text-[var(--text-secondary)] shadow-sm hover:bg-[var(--bg-main)] hover:text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] focus:ring-offset-2"
             >
               <svg
                 className="h-5 w-5"

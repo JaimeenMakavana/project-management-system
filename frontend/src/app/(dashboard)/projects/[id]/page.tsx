@@ -58,7 +58,7 @@ export default function ProjectDetailPage({
     return (
       <div className="p-8">
         <div className="text-center py-12">
-          <p className="text-gray-600">Project not found</p>
+          <p className="text-[var(--text-secondary)]">Project not found</p>
         </div>
       </div>
     );
@@ -124,14 +124,16 @@ export default function ProjectDetailPage({
         {/* Task Board */}
         <div>
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-xl font-semibold text-gray-900">Tasks</h2>
+            <h2 className="text-xl font-semibold text-[var(--text-primary)]">
+              Tasks
+            </h2>
             <div className="flex flex-wrap gap-2">
               <select
                 value={statusFilter}
                 onChange={(e) =>
                   setStatusFilter(e.target.value as TaskStatus | "ALL")
                 }
-                className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-card)] px-3 py-2 text-sm text-[var(--text-secondary)] shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] focus:border-[var(--accent-blue)]"
               >
                 <option value="ALL">All Statuses</option>
                 <option value="TODO">To Do</option>
@@ -144,7 +146,7 @@ export default function ProjectDetailPage({
                 onChange={(e) =>
                   setPriorityFilter(e.target.value as TaskPriority | "ALL")
                 }
-                className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-card)] px-3 py-2 text-sm text-[var(--text-secondary)] shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] focus:border-[var(--accent-blue)]"
               >
                 <option value="ALL">All Priorities</option>
                 <option value="LOW">Low</option>
@@ -226,10 +228,10 @@ export default function ProjectDetailPage({
 
               {selectedTask.description && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                  <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-1">
                     Description
                   </h3>
-                  <p className="text-gray-700 whitespace-pre-wrap">
+                  <p className="text-[var(--text-secondary)] whitespace-pre-wrap">
                     {selectedTask.description}
                   </p>
                 </div>
@@ -237,19 +239,21 @@ export default function ProjectDetailPage({
 
               {selectedTask.assigneeEmail && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                  <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-1">
                     Assignee
                   </h3>
-                  <p className="text-gray-700">{selectedTask.assigneeEmail}</p>
+                  <p className="text-[var(--text-secondary)]">
+                    {selectedTask.assigneeEmail}
+                  </p>
                 </div>
               )}
 
               {selectedTask.dueDate && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                  <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-1">
                     Due Date
                   </h3>
-                  <p className="text-gray-700">
+                  <p className="text-[var(--text-secondary)]">
                     {new Date(selectedTask.dueDate).toLocaleDateString(
                       "en-US",
                       {

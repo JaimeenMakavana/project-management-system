@@ -34,7 +34,10 @@ export function TaskTable({ tasks, onTaskClick }: TaskTableProps) {
         <TableBody>
           {!hasTasks ? (
             <TableRow className="cursor-default">
-              <TableCell colSpan={6} className="text-center text-gray-500">
+              <TableCell
+                colSpan={6}
+                className="text-center text-[var(--text-secondary)]"
+              >
                 No tasks yet for this project.
               </TableCell>
             </TableRow>
@@ -45,7 +48,7 @@ export function TaskTable({ tasks, onTaskClick }: TaskTableProps) {
                 onClick={() => onTaskClick?.(task)}
                 className="cursor-pointer"
               >
-                <TableCell className="font-medium text-gray-900">
+                <TableCell className="font-medium text-[var(--text-primary)]">
                   {task.title}
                 </TableCell>
                 <TableCell>
@@ -56,10 +59,10 @@ export function TaskTable({ tasks, onTaskClick }: TaskTableProps) {
                     <PriorityBadge priority={task.priority} size="sm" />
                   )}
                 </TableCell>
-                <TableCell className="text-gray-600">
+                <TableCell className="text-[var(--text-secondary)]">
                   {task.assigneeEmail || "-"}
                 </TableCell>
-                <TableCell className="text-gray-600">
+                <TableCell className="text-[var(--text-secondary)]">
                   {task.dueDate
                     ? new Date(task.dueDate).toLocaleDateString("en-US", {
                         month: "short",
@@ -68,7 +71,7 @@ export function TaskTable({ tasks, onTaskClick }: TaskTableProps) {
                       })
                     : "-"}
                 </TableCell>
-                <TableCell className="text-right text-gray-600">
+                <TableCell className="text-right text-[var(--text-secondary)]">
                   {task.commentCount}
                 </TableCell>
               </TableRow>

@@ -3,19 +3,52 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* --- Base Surfaces --- */
+  --bg-main: #f8f9fb; /* Light grey background behind all cards */
+  --bg-card: #ffffff; /* White background for standard widgets */
+  --bg-card-dark: #121214; /* Dark background for 'Product Analytics' card */
+
+  /* --- Typography --- */
+  --text-primary: #121214; /* Main headers (e.g., "Projects Monitoring") */
+  --text-secondary: #8d9095; /* Subtitles, labels, and muted text */
+  --text-inverse: #ffffff; /* Text inside the dark card */
+
+  /* --- Brand & Accents (Charts/UI) --- */
+  --accent-lime: #c6f432; /* The bright lime green in bar charts */
+  --accent-blue: #4d7cfe; /* The vibrant blue in bar charts and timeline */
+  --accent-blue-soft: #a6bfff; /* Lighter blue used in the 'Weekly Clicks' grid */
+  --accent-purple: #7065f0; /* The purple accent seen in some chart elements */
+
+  /* --- UI Elements --- */
+  --border-subtle: #e6e8ec; /* Light borders around cards or inputs */
+  --badge-bg: #f2f4f7; /* Background for small pills/badges like 'All 10,540' */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+    /* --- Base Surfaces --- */
+    --bg-main: #050505; /* Deepest black for the main background */
+    --bg-card: #121214; /* Soft charcoal (Taken from "Product Analytics" card) */
+    --bg-card-hover: #1c1c1f; /* Slightly lighter for hover states */
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
+    /* --- Typography --- */
+    --text-primary: #ffffff; /* Pure white for headers */
+    --text-secondary: #94969c; /* Cool grey for subtitles */
+    --text-inverse: #121214; /* Dark text if appearing on light accents */
+
+    /* --- UI Elements --- */
+    --border-subtle: #27272a; /* Dark grey borders */
+    --badge-bg: #1f1f23; /* Dark background for pills/badges */
+
+    /* --- Chart/Grid Specifics --- */
+    --grid-line: #2a2a2e; /* The faint grid lines seen in the dark radar chart */
+
+    /* --- Accents (Adjusted for Dark Mode Contrast) --- */
+    /* The Lime pops extremely well on dark, no change needed usually */
+    --accent-lime: #c6f432;
+    /* Blue slightly lightened to ensure readability against black */
+    --accent-blue: #5e89ff;
+  }
 }
 
 @layer utilities {

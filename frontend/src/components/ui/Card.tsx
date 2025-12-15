@@ -14,7 +14,7 @@ export function Card({
 }: CardProps) {
   return (
     <div
-      className={`bg-white rounded-lg border border-gray-200 shadow-sm ${
+      className={`bg-[var(--bg-card)] rounded-lg border border-[var(--border-subtle)] shadow-sm ${
         hover ? "transition-shadow hover:shadow-md" : ""
       } ${className}`}
       {...rest}
@@ -32,7 +32,9 @@ export function CardHeader({
   className?: string;
 }) {
   return (
-    <div className={`px-6 py-4 border-b border-gray-200 ${className}`}>
+    <div
+      className={`px-6 py-4 border-b border-[var(--border-subtle)] ${className}`}
+    >
       {children}
     </div>
   );
@@ -56,7 +58,9 @@ export function CardFooter({
   className?: string;
 }) {
   return (
-    <div className={`px-6 py-4 border-t border-gray-200 ${className}`}>
+    <div
+      className={`px-6 py-4 border-t border-[var(--border-subtle)] ${className}`}
+    >
       {children}
     </div>
   );

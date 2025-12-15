@@ -17,10 +17,14 @@ export function Button({
   const baseStyles = 'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
   
   const variants = {
-    primary: 'bg-gray-900 text-white hover:bg-gray-800 focus:ring-gray-900',
-    secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-500',
-    outline: 'border-2 border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500',
-    ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-gray-500',
+    primary:
+      'bg-[var(--accent-blue)] text-[var(--text-inverse)] hover:bg-[var(--accent-blue)] focus:ring-[var(--accent-blue)]',
+    secondary:
+      'bg-[var(--badge-bg)] text-[var(--text-primary)] hover:bg-[var(--bg-main)] focus:ring-[var(--border-subtle)]',
+    outline:
+      'border-2 border-[var(--border-subtle)] text-[var(--text-secondary)] hover:bg-[var(--badge-bg)] focus:ring-[var(--border-subtle)]',
+    ghost:
+      'text-[var(--text-secondary)] hover:bg-[var(--badge-bg)] focus:ring-[var(--border-subtle)]',
     danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-600',
   };
   
