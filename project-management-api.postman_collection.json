@@ -1,0 +1,1971 @@
+{
+	"info": {
+		"_postman_id": "pms-graphql-api-collection",
+		"name": "Project Management System - GraphQL API",
+		"description": "Comprehensive Postman collection for the Project Management System GraphQL API.\n\n## Overview\nThis API provides complete CRUD operations for:\n- **Organizations**: Multi-tenant organization management\n- **Projects**: Project lifecycle management\n- **Tasks**: Task tracking with status workflow\n- **Comments**: Task discussion and collaboration\n\n## Quick Start\n1. Set the `baseUrl` variable to your server (default: `http://localhost:8000`)\n2. Start with creating an Organization\n3. Create Projects within the Organization\n4. Add Tasks to Projects\n5. Add Comments to Tasks\n\n## GraphQL Endpoint\nAll requests go to `{{baseUrl}}/graphql`",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8000",
+			"description": "Base URL for the API server"
+		},
+		{
+			"key": "organizationId",
+			"value": "1",
+			"description": "Current organization ID for testing"
+		},
+		{
+			"key": "projectId",
+			"value": "1",
+			"description": "Current project ID for testing"
+		},
+		{
+			"key": "taskId",
+			"value": "1",
+			"description": "Current task ID for testing"
+		},
+		{
+			"key": "commentId",
+			"value": "1",
+			"description": "Current comment ID for testing"
+		}
+	],
+	"item": [
+		{
+			"name": "🏢 Organizations",
+			"description": "Organization management endpoints. Organizations are the top-level entity for multi-tenancy.",
+			"item": [
+				{
+					"name": "Create Organization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.test('Organization created successfully', function() {",
+									"    pm.expect(response.data.createOrganization.success).to.be.true;",
+									"});",
+									"",
+									"if (response.data.createOrganization.organization) {",
+									"    pm.collectionVariables.set('organizationId', response.data.createOrganization.organization.id);",
+									"    console.log('Set organizationId to:', response.data.createOrganization.organization.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateOrganization($name: String!, $contactEmail: String!, $slug: String) {\n  createOrganization(\n    name: $name\n    contactEmail: $contactEmail\n    slug: $slug\n  ) {\n    success\n    message\n    organization {\n      id\n      name\n      slug\n      contactEmail\n      projectCount\n      activeProjectCount\n      createdAt\n    }\n  }\n}",
+								"variables": "{\n    \"name\": \"Acme Corporation\",\n    \"contactEmail\": \"contact@acme.com\",\n    \"slug\": \"acme-corp\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Create a new organization. Organizations are the root entity for multi-tenancy.\n\n**Required Fields:**\n- `name`: Organization name\n- `contactEmail`: Primary contact email\n\n**Optional Fields:**\n- `slug`: URL-friendly identifier (auto-generated if not provided)"
+					}
+				},
+				{
+					"name": "Create Organization - Tech Startup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createOrganization(\n    name: \"TechStartup Inc\"\n    contactEmail: \"hello@techstartup.io\"\n    slug: \"tech-startup\"\n  ) {\n    success\n    message\n    organization {\n      id\n      name\n      slug\n      contactEmail\n      createdAt\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Create a tech startup organization for testing multi-tenancy."
+					}
+				},
+				{
+					"name": "List All Organizations",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query ListOrganizations {\n  organizations {\n    id\n    name\n    slug\n    contactEmail\n    projectCount\n    activeProjectCount\n    createdAt\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Retrieve all organizations in the system with their project counts."
+					}
+				},
+				{
+					"name": "Get Organization by ID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetOrganization($id: Int!) {\n  organization(id: $id) {\n    id\n    name\n    slug\n    contactEmail\n    projectCount\n    activeProjectCount\n    projects {\n      id\n      name\n      status\n      taskCount\n      completedTasks\n    }\n  }\n}",
+								"variables": "{\n    \"id\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get a single organization by ID with its associated projects."
+					}
+				},
+				{
+					"name": "Get Organization by Slug",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetOrganizationBySlug($slug: String!) {\n  organizationBySlug(slug: $slug) {\n    id\n    name\n    slug\n    contactEmail\n    projectCount\n    activeProjectCount\n  }\n}",
+								"variables": "{\n    \"slug\": \"acme-corp\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Retrieve an organization using its URL-friendly slug."
+					}
+				},
+				{
+					"name": "Get Organization Statistics",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetOrganizationStats($organizationId: Int!) {\n  organizationStats(organizationId: $organizationId) {\n    totalProjects\n    activeProjects\n    completedProjects\n    totalTasks\n    completedTasks\n  }\n}",
+								"variables": "{\n    \"organizationId\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get comprehensive statistics for an organization including project and task counts."
+					}
+				},
+				{
+					"name": "Update Organization",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation UpdateOrganization($id: Int!, $name: String, $contactEmail: String, $slug: String) {\n  updateOrganization(\n    id: $id\n    name: $name\n    contactEmail: $contactEmail\n    slug: $slug\n  ) {\n    success\n    message\n    organization {\n      id\n      name\n      slug\n      contactEmail\n    }\n  }\n}",
+								"variables": "{\n    \"id\": {{organizationId}},\n    \"name\": \"Acme Corporation Inc.\",\n    \"contactEmail\": \"info@acme-corp.com\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Update organization details. Only provided fields will be updated."
+					}
+				},
+				{
+					"name": "Full Organization Overview",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query FullOrganizationOverview($id: Int!) {\n  organization(id: $id) {\n    id\n    name\n    slug\n    contactEmail\n    projectCount\n    activeProjectCount\n    projects {\n      id\n      name\n      status\n      taskCount\n      completedTasks\n      completionRate\n      tasks {\n        id\n        title\n        status\n        assigneeEmail\n        commentCount\n      }\n    }\n  }\n}",
+								"variables": "{\n    \"id\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get complete organization data including all projects, tasks, and their details."
+					}
+				}
+			]
+		},
+		{
+			"name": "📁 Projects",
+			"description": "Project management endpoints. Projects belong to an organization and contain tasks.",
+			"item": [
+				{
+					"name": "Create Project - Website Redesign",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.test('Project created successfully', function() {",
+									"    pm.expect(response.data.createProject.success).to.be.true;",
+									"});",
+									"",
+									"if (response.data.createProject.project) {",
+									"    pm.collectionVariables.set('projectId', response.data.createProject.project.id);",
+									"    console.log('Set projectId to:', response.data.createProject.project.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateProject($organizationId: Int!, $name: String!, $description: String, $status: String, $dueDate: Date) {\n  createProject(\n    organizationId: $organizationId\n    name: $name\n    description: $description\n    status: $status\n    dueDate: $dueDate\n  ) {\n    success\n    message\n    project {\n      id\n      name\n      description\n      status\n      dueDate\n      taskCount\n      organization {\n        id\n        name\n      }\n    }\n  }\n}",
+								"variables": "{\n    \"organizationId\": {{organizationId}},\n    \"name\": \"Website Redesign\",\n    \"description\": \"Complete redesign of the company website with modern UI/UX\",\n    \"status\": \"ACTIVE\",\n    \"dueDate\": \"2025-12-31\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Create a new project for website redesign.\n\n**Status Options:**\n- `ACTIVE`: Currently in progress\n- `PLANNING`: In planning phase\n- `ON_HOLD`: Temporarily paused\n- `COMPLETED`: Finished\n- `CANCELLED`: Abandoned"
+					}
+				},
+				{
+					"name": "Create Project - Mobile App Development",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createProject(\n    organizationId: {{organizationId}}\n    name: \"Mobile App Development\"\n    description: \"Native iOS and Android app for customer engagement\"\n    status: \"PLANNING\"\n    dueDate: \"2026-06-30\"\n  ) {\n    success\n    message\n    project {\n      id\n      name\n      description\n      status\n      dueDate\n      organization {\n        name\n      }\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Create a mobile app development project in planning phase."
+					}
+				},
+				{
+					"name": "Create Project - API Integration",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createProject(\n    organizationId: {{organizationId}}\n    name: \"Third-Party API Integration\"\n    description: \"Integrate payment gateway and analytics APIs\"\n    status: \"ACTIVE\"\n    dueDate: \"2025-09-15\"\n  ) {\n    success\n    message\n    project {\n      id\n      name\n      status\n      dueDate\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Create an API integration project."
+					}
+				},
+				{
+					"name": "List All Projects",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query ListAllProjects {\n  projects {\n    id\n    name\n    description\n    status\n    dueDate\n    taskCount\n    completedTasks\n    inProgressTasks\n    todoTasks\n    completionRate\n    organization {\n      id\n      name\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Retrieve all projects across all organizations with task statistics."
+					}
+				},
+				{
+					"name": "List Projects by Organization",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query ProjectsByOrganization($organizationId: Int!) {\n  projectsByOrganization(organizationId: $organizationId) {\n    id\n    name\n    description\n    status\n    dueDate\n    taskCount\n    completedTasks\n    inProgressTasks\n    todoTasks\n    completionRate\n  }\n}",
+								"variables": "{\n    \"organizationId\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get all projects belonging to a specific organization."
+					}
+				},
+				{
+					"name": "List Active Projects",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query ActiveProjects($organizationId: Int!) {\n  projects(organizationId: $organizationId, status: \"ACTIVE\") {\n    id\n    name\n    description\n    status\n    taskCount\n    completedTasks\n    completionRate\n    dueDate\n  }\n}",
+								"variables": "{\n    \"organizationId\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Filter projects by ACTIVE status within an organization."
+					}
+				},
+				{
+					"name": "Get Project by ID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetProject($id: Int!) {\n  project(id: $id) {\n    id\n    name\n    description\n    status\n    dueDate\n    taskCount\n    completedTasks\n    inProgressTasks\n    todoTasks\n    completionRate\n    createdAt\n    organization {\n      id\n      name\n      contactEmail\n    }\n    tasks {\n      id\n      title\n      status\n      assigneeEmail\n      dueDate\n    }\n  }\n}",
+								"variables": "{\n    \"id\": {{projectId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get a single project with all its details and tasks."
+					}
+				},
+				{
+					"name": "Get Project Statistics",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetProjectStats($projectId: Int!) {\n  projectStats(projectId: $projectId) {\n    projectId\n    totalTasks\n    todoTasks\n    inProgressTasks\n    completedTasks\n    completionRate\n  }\n}",
+								"variables": "{\n    \"projectId\": {{projectId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get detailed task statistics for a project."
+					}
+				},
+				{
+					"name": "Update Project",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation UpdateProject($id: Int!, $name: String, $description: String, $status: String, $dueDate: Date) {\n  updateProject(\n    id: $id\n    name: $name\n    description: $description\n    status: $status\n    dueDate: $dueDate\n  ) {\n    success\n    message\n    project {\n      id\n      name\n      description\n      status\n      dueDate\n    }\n  }\n}",
+								"variables": "{\n    \"id\": {{projectId}},\n    \"name\": \"Website Redesign v2.0\",\n    \"status\": \"IN_PROGRESS\",\n    \"description\": \"Updated scope: Include new branding guidelines\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Update project details. Only provided fields will be changed."
+					}
+				},
+				{
+					"name": "Update Project Status to Completed",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CompleteProject($id: Int!, $organizationId: Int!) {\n  updateProject(\n    id: $id\n    organizationId: $organizationId\n    status: \"COMPLETED\"\n  ) {\n    success\n    message\n    project {\n      id\n      name\n      status\n    }\n  }\n}",
+								"variables": "{\n    \"id\": {{projectId}},\n    \"organizationId\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Mark a project as completed with organization verification."
+					}
+				},
+				{
+					"name": "Project Detail with Tasks and Comments",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query ProjectFullDetail($id: Int!) {\n  project(id: $id) {\n    id\n    name\n    description\n    status\n    dueDate\n    completionRate\n    organization {\n      name\n      contactEmail\n    }\n    tasks {\n      id\n      title\n      description\n      status\n      assigneeEmail\n      dueDate\n      commentCount\n      comments {\n        id\n        content\n        authorEmail\n        createdAt\n      }\n    }\n  }\n}",
+								"variables": "{\n    \"id\": {{projectId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get complete project data including all tasks and their comments."
+					}
+				},
+				{
+					"name": "Delete Project",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation DeleteProject($id: Int!, $organizationId: Int!) {\n  deleteProject(id: $id, organizationId: $organizationId) {\n    success\n    message\n  }\n}",
+								"variables": "{\n    \"id\": {{projectId}},\n    \"organizationId\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Delete a project. Requires organization ID for multi-tenancy verification."
+					}
+				}
+			]
+		},
+		{
+			"name": "✅ Tasks",
+			"description": "Task management endpoints. Tasks belong to projects and have a status workflow.",
+			"item": [
+				{
+					"name": "Create Task - Design Homepage",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.test('Task created successfully', function() {",
+									"    pm.expect(response.data.createTask.success).to.be.true;",
+									"});",
+									"",
+									"if (response.data.createTask.task) {",
+									"    pm.collectionVariables.set('taskId', response.data.createTask.task.id);",
+									"    console.log('Set taskId to:', response.data.createTask.task.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateTask($projectId: Int!, $title: String!, $description: String, $status: String, $assigneeEmail: String, $dueDate: DateTime, $organizationId: Int) {\n  createTask(\n    projectId: $projectId\n    title: $title\n    description: $description\n    status: $status\n    assigneeEmail: $assigneeEmail\n    dueDate: $dueDate\n    organizationId: $organizationId\n  ) {\n    success\n    message\n    task {\n      id\n      title\n      description\n      status\n      assigneeEmail\n      dueDate\n      project {\n        id\n        name\n      }\n    }\n  }\n}",
+								"variables": "{\n    \"projectId\": {{projectId}},\n    \"title\": \"Design Homepage Mockup\",\n    \"description\": \"Create initial wireframes and high-fidelity mockups for the new homepage design\",\n    \"status\": \"TODO\",\n    \"assigneeEmail\": \"designer@acme.com\",\n    \"dueDate\": \"2025-08-20T17:00:00\",\n    \"organizationId\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Create a new task for homepage design.\n\n**Status Options:**\n- `TODO`: Not started\n- `IN_PROGRESS`: Currently being worked on\n- `DONE`: Completed"
+					}
+				},
+				{
+					"name": "Create Task - Backend API",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createTask(\n    projectId: {{projectId}}\n    title: \"Develop REST API Endpoints\"\n    description: \"Implement user authentication, CRUD operations, and data validation\"\n    status: \"TODO\"\n    assigneeEmail: \"backend-dev@acme.com\"\n    dueDate: \"2025-08-25T18:00:00\"\n    organizationId: {{organizationId}}\n  ) {\n    success\n    message\n    task {\n      id\n      title\n      status\n      assigneeEmail\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Create a backend development task."
+					}
+				},
+				{
+					"name": "Create Task - Frontend Implementation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createTask(\n    projectId: {{projectId}}\n    title: \"Implement React Components\"\n    description: \"Build reusable UI components following the approved design system\"\n    status: \"TODO\"\n    assigneeEmail: \"frontend-dev@acme.com\"\n    dueDate: \"2025-09-01T17:00:00\"\n    organizationId: {{organizationId}}\n  ) {\n    success\n    task {\n      id\n      title\n      status\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Create a frontend development task."
+					}
+				},
+				{
+					"name": "Create Task - Testing",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createTask(\n    projectId: {{projectId}}\n    title: \"Write Unit Tests\"\n    description: \"Create comprehensive test suite with 80% code coverage\"\n    status: \"TODO\"\n    assigneeEmail: \"qa-engineer@acme.com\"\n    dueDate: \"2025-09-10T17:00:00\"\n  ) {\n    success\n    task {\n      id\n      title\n      status\n      assigneeEmail\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Create a testing task."
+					}
+				},
+				{
+					"name": "Create Task - Documentation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createTask(\n    projectId: {{projectId}}\n    title: \"Write Technical Documentation\"\n    description: \"Create API documentation, deployment guides, and architecture diagrams\"\n    status: \"TODO\"\n    assigneeEmail: \"tech-writer@acme.com\"\n  ) {\n    success\n    task {\n      id\n      title\n      status\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Create a documentation task without a due date."
+					}
+				},
+				{
+					"name": "List All Tasks",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query ListAllTasks {\n  tasks {\n    id\n    title\n    description\n    status\n    assigneeEmail\n    dueDate\n    commentCount\n    createdAt\n    project {\n      id\n      name\n      organization {\n        name\n      }\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Retrieve all tasks across all projects and organizations."
+					}
+				},
+				{
+					"name": "List Tasks by Project",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query TasksByProject($projectId: Int!) {\n  tasksByProject(projectId: $projectId) {\n    id\n    title\n    description\n    status\n    assigneeEmail\n    dueDate\n    commentCount\n    createdAt\n  }\n}",
+								"variables": "{\n    \"projectId\": {{projectId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get all tasks belonging to a specific project."
+					}
+				},
+				{
+					"name": "List Tasks by Organization",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query TasksByOrganization($organizationId: Int!) {\n  tasksByOrganization(organizationId: $organizationId) {\n    id\n    title\n    status\n    assigneeEmail\n    dueDate\n    project {\n      id\n      name\n    }\n  }\n}",
+								"variables": "{\n    \"organizationId\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get all tasks across all projects in an organization."
+					}
+				},
+				{
+					"name": "Filter Tasks - In Progress",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query InProgressTasks($projectId: Int!) {\n  tasks(projectId: $projectId, status: \"IN_PROGRESS\") {\n    id\n    title\n    status\n    assigneeEmail\n    dueDate\n  }\n}",
+								"variables": "{\n    \"projectId\": {{projectId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Filter tasks by IN_PROGRESS status."
+					}
+				},
+				{
+					"name": "Filter Tasks - By Assignee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query TasksByAssignee($assigneeEmail: String!) {\n  tasks(assigneeEmail: $assigneeEmail) {\n    id\n    title\n    status\n    dueDate\n    project {\n      name\n      organization {\n        name\n      }\n    }\n  }\n}",
+								"variables": "{\n    \"assigneeEmail\": \"designer@acme.com\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get all tasks assigned to a specific user."
+					}
+				},
+				{
+					"name": "Filter Tasks - TODO Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query TodoTasks($organizationId: Int!) {\n  tasksByOrganization(organizationId: $organizationId, status: \"TODO\") {\n    id\n    title\n    assigneeEmail\n    dueDate\n    project {\n      name\n    }\n  }\n}",
+								"variables": "{\n    \"organizationId\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get all TODO tasks in an organization."
+					}
+				},
+				{
+					"name": "Get Task by ID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetTask($id: Int!) {\n  task(id: $id) {\n    id\n    title\n    description\n    status\n    assigneeEmail\n    dueDate\n    commentCount\n    createdAt\n    project {\n      id\n      name\n      organization {\n        id\n        name\n      }\n    }\n    comments {\n      id\n      content\n      authorEmail\n      createdAt\n    }\n  }\n}",
+								"variables": "{\n    \"id\": {{taskId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get a single task with all details and comments."
+					}
+				},
+				{
+					"name": "Update Task - Start Progress",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation StartTaskProgress($id: Int!) {\n  updateTask(\n    id: $id\n    status: \"IN_PROGRESS\"\n  ) {\n    success\n    message\n    task {\n      id\n      title\n      status\n    }\n  }\n}",
+								"variables": "{\n    \"id\": {{taskId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Move task from TODO to IN_PROGRESS status."
+					}
+				},
+				{
+					"name": "Update Task - Reassign",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation ReassignTask($id: Int!, $assigneeEmail: String!) {\n  updateTask(\n    id: $id\n    assigneeEmail: $assigneeEmail\n  ) {\n    success\n    message\n    task {\n      id\n      title\n      assigneeEmail\n    }\n  }\n}",
+								"variables": "{\n    \"id\": {{taskId}},\n    \"assigneeEmail\": \"senior-designer@acme.com\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Reassign a task to a different team member."
+					}
+				},
+				{
+					"name": "Update Task - Complete",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CompleteTask($id: Int!, $organizationId: Int!) {\n  updateTask(\n    id: $id\n    status: \"DONE\"\n    organizationId: $organizationId\n  ) {\n    success\n    message\n    task {\n      id\n      title\n      status\n    }\n  }\n}",
+								"variables": "{\n    \"id\": {{taskId}},\n    \"organizationId\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Mark a task as completed."
+					}
+				},
+				{
+					"name": "Update Task - With Validation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation UpdateTaskWithValidation($id: Int!, $status: String!, $organizationId: Int!) {\n  updateTask(\n    id: $id\n    status: $status\n    organizationId: $organizationId\n    validateTransition: true\n  ) {\n    success\n    message\n    task {\n      id\n      title\n      status\n    }\n  }\n}",
+								"variables": "{\n    \"id\": {{taskId}},\n    \"status\": \"DONE\",\n    \"organizationId\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Update task status with transition validation (e.g., TODO → IN_PROGRESS → DONE)."
+					}
+				},
+				{
+					"name": "Update Task - Full Update",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation FullTaskUpdate($id: Int!, $title: String, $description: String, $status: String, $assigneeEmail: String, $dueDate: DateTime) {\n  updateTask(\n    id: $id\n    title: $title\n    description: $description\n    status: $status\n    assigneeEmail: $assigneeEmail\n    dueDate: $dueDate\n  ) {\n    success\n    message\n    task {\n      id\n      title\n      description\n      status\n      assigneeEmail\n      dueDate\n    }\n  }\n}",
+								"variables": "{\n    \"id\": {{taskId}},\n    \"title\": \"Design Homepage Mockup v2\",\n    \"description\": \"Updated: Include mobile responsive designs\",\n    \"status\": \"IN_PROGRESS\",\n    \"assigneeEmail\": \"lead-designer@acme.com\",\n    \"dueDate\": \"2025-08-25T17:00:00\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Update multiple task fields at once."
+					}
+				},
+				{
+					"name": "Delete Task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation DeleteTask($id: Int!, $organizationId: Int!) {\n  deleteTask(id: $id, organizationId: $organizationId) {\n    success\n    message\n  }\n}",
+								"variables": "{\n    \"id\": {{taskId}},\n    \"organizationId\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Delete a task with organization verification."
+					}
+				}
+			]
+		},
+		{
+			"name": "💬 Task Comments",
+			"description": "Comment management for task collaboration and discussion.",
+			"item": [
+				{
+					"name": "Add Comment to Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.test('Comment added successfully', function() {",
+									"    pm.expect(response.data.addTaskComment.success).to.be.true;",
+									"});",
+									"",
+									"if (response.data.addTaskComment.comment) {",
+									"    pm.collectionVariables.set('commentId', response.data.addTaskComment.comment.id);",
+									"    console.log('Set commentId to:', response.data.addTaskComment.comment.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation AddTaskComment($taskId: Int!, $content: String!, $authorEmail: String!, $organizationId: Int) {\n  addTaskComment(\n    taskId: $taskId\n    content: $content\n    authorEmail: $authorEmail\n    organizationId: $organizationId\n  ) {\n    success\n    message\n    comment {\n      id\n      content\n      authorEmail\n      createdAt\n      task {\n        id\n        title\n      }\n    }\n  }\n}",
+								"variables": "{\n    \"taskId\": {{taskId}},\n    \"content\": \"I've started working on the wireframes. Initial sketches look promising!\",\n    \"authorEmail\": \"designer@acme.com\",\n    \"organizationId\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Add a new comment to a task for team collaboration."
+					}
+				},
+				{
+					"name": "Add Comment - Progress Update",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  addTaskComment(\n    taskId: {{taskId}}\n    content: \"Completed 50% of the design. Waiting for feedback on color scheme before proceeding.\"\n    authorEmail: \"designer@acme.com\"\n    organizationId: {{organizationId}}\n  ) {\n    success\n    comment {\n      id\n      content\n      createdAt\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Add a progress update comment."
+					}
+				},
+				{
+					"name": "Add Comment - Feedback",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  addTaskComment(\n    taskId: {{taskId}}\n    content: \"Great work so far! Let's go with the blue accent color. Please also add dark mode variants.\"\n    authorEmail: \"project-manager@acme.com\"\n    organizationId: {{organizationId}}\n  ) {\n    success\n    comment {\n      id\n      content\n      authorEmail\n      createdAt\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Add manager feedback comment."
+					}
+				},
+				{
+					"name": "Add Comment - Technical Note",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  addTaskComment(\n    taskId: {{taskId}}\n    content: \"Note: The design files are exported in Figma. Link: https://figma.com/file/abc123. Make sure to use the latest version.\"\n    authorEmail: \"designer@acme.com\"\n  ) {\n    success\n    comment {\n      id\n      content\n      authorEmail\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Add a technical note with resource links."
+					}
+				},
+				{
+					"name": "List Comments for Task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query TaskComments($taskId: Int!) {\n  taskComments(taskId: $taskId) {\n    id\n    content\n    authorEmail\n    createdAt\n    task {\n      id\n      title\n      status\n    }\n  }\n}",
+								"variables": "{\n    \"taskId\": {{taskId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get all comments for a specific task."
+					}
+				},
+				{
+					"name": "Update Comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation UpdateComment($id: Int!, $content: String!) {\n  updateTaskComment(\n    id: $id\n    content: $content\n  ) {\n    success\n    message\n    comment {\n      id\n      content\n      authorEmail\n    }\n  }\n}",
+								"variables": "{\n    \"id\": {{commentId}},\n    \"content\": \"[UPDATED] Wireframes are complete and ready for review. High-fidelity mockups will be ready by EOD.\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Update an existing comment's content."
+					}
+				},
+				{
+					"name": "Delete Comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation DeleteComment($id: Int!) {\n  deleteTaskComment(id: $id) {\n    success\n    message\n  }\n}",
+								"variables": "{\n    \"id\": {{commentId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Delete a comment by ID."
+					}
+				}
+			]
+		},
+		{
+			"name": "📊 Dashboard & Reports",
+			"description": "Complex queries for dashboards, reports, and analytics.",
+			"item": [
+				{
+					"name": "Dashboard Summary",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query DashboardSummary($organizationId: Int!) {\n  organizationStats(organizationId: $organizationId) {\n    totalProjects\n    activeProjects\n    completedProjects\n    totalTasks\n    completedTasks\n  }\n  \n  activeProjects: projectsByOrganization(organizationId: $organizationId, status: \"ACTIVE\") {\n    id\n    name\n    taskCount\n    completedTasks\n    completionRate\n    dueDate\n  }\n  \n  todoTasks: tasksByOrganization(organizationId: $organizationId, status: \"TODO\") {\n    id\n    title\n    assigneeEmail\n    dueDate\n    project {\n      name\n    }\n  }\n}",
+								"variables": "{\n    \"organizationId\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get a comprehensive dashboard view with organization stats, active projects, and pending tasks."
+					}
+				},
+				{
+					"name": "Team Workload Report",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query TeamWorkload($organizationId: Int!) {\n  tasksByOrganization(organizationId: $organizationId) {\n    id\n    title\n    status\n    assigneeEmail\n    dueDate\n    project {\n      name\n    }\n  }\n}",
+								"variables": "{\n    \"organizationId\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get all tasks grouped by assignee for workload analysis."
+					}
+				},
+				{
+					"name": "Project Health Check",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query ProjectHealthCheck($organizationId: Int!) {\n  projectsByOrganization(organizationId: $organizationId) {\n    id\n    name\n    status\n    dueDate\n    taskCount\n    completedTasks\n    inProgressTasks\n    todoTasks\n    completionRate\n  }\n}",
+								"variables": "{\n    \"organizationId\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get project health metrics including completion rates and task distribution."
+					}
+				},
+				{
+					"name": "Overdue Tasks Report",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query OverdueTasksReport($organizationId: Int!) {\n  tasksByOrganization(organizationId: $organizationId) {\n    id\n    title\n    status\n    dueDate\n    assigneeEmail\n    project {\n      id\n      name\n    }\n  }\n}",
+								"variables": "{\n    \"organizationId\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get all tasks with due dates for overdue analysis (filter client-side for overdue items)."
+					}
+				},
+				{
+					"name": "Complete Organization Report",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query CompleteOrganizationReport($id: Int!) {\n  organization(id: $id) {\n    id\n    name\n    slug\n    contactEmail\n    projectCount\n    activeProjectCount\n    createdAt\n    projects {\n      id\n      name\n      description\n      status\n      dueDate\n      taskCount\n      completedTasks\n      inProgressTasks\n      todoTasks\n      completionRate\n      createdAt\n      tasks {\n        id\n        title\n        description\n        status\n        assigneeEmail\n        dueDate\n        commentCount\n        createdAt\n        comments {\n          id\n          content\n          authorEmail\n          createdAt\n        }\n      }\n    }\n  }\n}",
+								"variables": "{\n    \"id\": {{organizationId}}\n}"
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Get complete organization data export including all projects, tasks, and comments."
+					}
+				}
+			]
+		},
+		{
+			"name": "🔒 Multi-Tenancy Testing",
+			"description": "Test multi-tenancy isolation and security boundaries.",
+			"item": [
+				{
+					"name": "Create Organization A",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createOrganization(\n    name: \"Company Alpha\"\n    contactEmail: \"contact@alpha.com\"\n    slug: \"company-alpha\"\n  ) {\n    success\n    organization {\n      id\n      name\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Create first organization for multi-tenancy testing."
+					}
+				},
+				{
+					"name": "Create Organization B",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createOrganization(\n    name: \"Company Beta\"\n    contactEmail: \"contact@beta.com\"\n    slug: \"company-beta\"\n  ) {\n    success\n    organization {\n      id\n      name\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Create second organization for multi-tenancy testing."
+					}
+				},
+				{
+					"name": "Create Project in Org A",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createProject(\n    organizationId: 1\n    name: \"Alpha Project\"\n    description: \"This project belongs to Company Alpha\"\n  ) {\n    success\n    project {\n      id\n      name\n      organization {\n        name\n      }\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Create a project in Organization A."
+					}
+				},
+				{
+					"name": "Create Project in Org B",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createProject(\n    organizationId: 2\n    name: \"Beta Project\"\n    description: \"This project belongs to Company Beta\"\n  ) {\n    success\n    project {\n      id\n      name\n      organization {\n        name\n      }\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Create a project in Organization B."
+					}
+				},
+				{
+					"name": "⚠️ Cross-Org Access (Should Fail)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  updateProject(\n    id: 1\n    organizationId: 2\n    name: \"Attempting to update Org A's project from Org B\"\n  ) {\n    success\n    message\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "**EXPECTED TO FAIL**\n\nAttempt to update a project from Organization A using Organization B's context.\n\nThis should return `success: false` with an organization mismatch error."
+					}
+				},
+				{
+					"name": "⚠️ Cross-Org Task Create (Should Fail)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createTask(\n    projectId: 1\n    title: \"Unauthorized Task\"\n    organizationId: 2\n  ) {\n    success\n    message\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "**EXPECTED TO FAIL**\n\nAttempt to create a task in Organization A's project using Organization B's context."
+					}
+				},
+				{
+					"name": "⚠️ Cross-Org Delete (Should Fail)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  deleteProject(\n    id: 1\n    organizationId: 2\n  ) {\n    success\n    message\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "**EXPECTED TO FAIL**\n\nAttempt to delete Organization A's project using Organization B's context."
+					}
+				}
+			]
+		},
+		{
+			"name": "🧪 Error Handling Tests",
+			"description": "Test validation and error handling scenarios.",
+			"item": [
+				{
+					"name": "Create Org - Missing Required Field",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createOrganization(\n    name: \"Test Org\"\n  ) {\n    success\n    message\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Test validation error when required field (contactEmail) is missing."
+					}
+				},
+				{
+					"name": "Get Non-Existent Organization",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\n  organization(id: 99999) {\n    id\n    name\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Test response when querying a non-existent organization."
+					}
+				},
+				{
+					"name": "Create Project - Invalid Org ID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createProject(\n    organizationId: 99999\n    name: \"Orphan Project\"\n  ) {\n    success\n    message\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Test error handling when creating project with non-existent organization."
+					}
+				},
+				{
+					"name": "Create Task - Invalid Project ID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createTask(\n    projectId: 99999\n    title: \"Orphan Task\"\n  ) {\n    success\n    message\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Test error handling when creating task with non-existent project."
+					}
+				},
+				{
+					"name": "Invalid Status Value",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createTask(\n    projectId: {{projectId}}\n    title: \"Test Task\"\n    status: \"INVALID_STATUS\"\n  ) {\n    success\n    message\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Test validation when using an invalid status value."
+					}
+				},
+				{
+					"name": "Update Non-Existent Task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  updateTask(\n    id: 99999\n    title: \"Ghost Task\"\n  ) {\n    success\n    message\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Test error when updating a non-existent task."
+					}
+				},
+				{
+					"name": "Add Comment - Invalid Task ID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  addTaskComment(\n    taskId: 99999\n    content: \"Comment on ghost task\"\n    authorEmail: \"test@test.com\"\n  ) {\n    success\n    message\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Test error when adding comment to non-existent task."
+					}
+				}
+			]
+		},
+		{
+			"name": "🚀 Quick Setup Workflow",
+			"description": "Run these requests in order to quickly set up test data.",
+			"item": [
+				{
+					"name": "1. Create Demo Organization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"if (response.data.createOrganization.organization) {",
+									"    pm.collectionVariables.set('organizationId', response.data.createOrganization.organization.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createOrganization(\n    name: \"Demo Corporation\"\n    contactEmail: \"demo@democorp.com\"\n    slug: \"demo-corp\"\n  ) {\n    success\n    message\n    organization {\n      id\n      name\n      slug\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						}
+					}
+				},
+				{
+					"name": "2. Create Demo Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"if (response.data.createProject.project) {",
+									"    pm.collectionVariables.set('projectId', response.data.createProject.project.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createProject(\n    organizationId: {{organizationId}}\n    name: \"Demo Project\"\n    description: \"A sample project for testing the API\"\n    status: \"ACTIVE\"\n    dueDate: \"2025-12-31\"\n  ) {\n    success\n    message\n    project {\n      id\n      name\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						}
+					}
+				},
+				{
+					"name": "3. Create Demo Tasks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"if (response.data.task1.task) {",
+									"    pm.collectionVariables.set('taskId', response.data.task1.task.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  task1: createTask(\n    projectId: {{projectId}}\n    title: \"Setup Development Environment\"\n    description: \"Configure local development environment with all dependencies\"\n    status: \"DONE\"\n    assigneeEmail: \"dev@democorp.com\"\n  ) {\n    success\n    task { id title }\n  }\n  \n  task2: createTask(\n    projectId: {{projectId}}\n    title: \"Implement Core Features\"\n    description: \"Build the main application features\"\n    status: \"IN_PROGRESS\"\n    assigneeEmail: \"dev@democorp.com\"\n    dueDate: \"2025-09-15T17:00:00\"\n  ) {\n    success\n    task { id title }\n  }\n  \n  task3: createTask(\n    projectId: {{projectId}}\n    title: \"Write Documentation\"\n    description: \"Create user guides and API documentation\"\n    status: \"TODO\"\n    assigneeEmail: \"writer@democorp.com\"\n    dueDate: \"2025-10-01T17:00:00\"\n  ) {\n    success\n    task { id title }\n  }\n  \n  task4: createTask(\n    projectId: {{projectId}}\n    title: \"Deploy to Production\"\n    description: \"Final deployment and go-live\"\n    status: \"TODO\"\n    assigneeEmail: \"devops@democorp.com\"\n    dueDate: \"2025-12-15T17:00:00\"\n  ) {\n    success\n    task { id title }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						}
+					}
+				},
+				{
+					"name": "4. Add Demo Comments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"if (response.data.comment1.comment) {",
+									"    pm.collectionVariables.set('commentId', response.data.comment1.comment.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  comment1: addTaskComment(\n    taskId: {{taskId}}\n    content: \"Started working on this. Will update progress daily.\"\n    authorEmail: \"dev@democorp.com\"\n  ) {\n    success\n    comment { id content }\n  }\n  \n  comment2: addTaskComment(\n    taskId: {{taskId}}\n    content: \"Great progress! Keep up the good work.\"\n    authorEmail: \"manager@democorp.com\"\n  ) {\n    success\n    comment { id content }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						}
+					}
+				},
+				{
+					"name": "5. Verify Setup - Dashboard",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query VerifySetup {\n  organization(id: {{organizationId}}) {\n    name\n    projectCount\n    projects {\n      name\n      taskCount\n      completedTasks\n      completionRate\n      tasks {\n        title\n        status\n        commentCount\n      }\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/graphql",
+							"host": ["{{baseUrl}}"],
+							"path": ["graphql"]
+						},
+						"description": "Verify all demo data was created correctly."
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Pre-request script for all requests",
+					"console.log('Executing request:', pm.info.requestName);"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global test script",
+					"pm.test('Response is JSON', function() {",
+					"    pm.response.to.be.json;",
+					"});",
+					"",
+					"pm.test('Response time is acceptable', function() {",
+					"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+					"});"
+				]
+			}
+		}
+	]
+}
+
