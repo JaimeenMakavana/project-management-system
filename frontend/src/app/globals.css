@@ -19,6 +19,7 @@
   --accent-blue: #4d7cfe; /* The vibrant blue in bar charts and timeline */
   --accent-blue-soft: #a6bfff; /* Lighter blue used in the 'Weekly Clicks' grid */
   --accent-purple: #7065f0; /* The purple accent seen in some chart elements */
+  --accent-danger: #ef4444; /* Red accent for danger/delete actions */
 
   /* --- UI Elements --- */
   --border-subtle: #e6e8ec; /* Light borders around cards or inputs */
@@ -55,6 +56,7 @@
     --accent-lime: #c6f432;
     /* Blue slightly lightened to ensure readability against black */
     --accent-blue: #5e89ff;
+    --accent-danger: #f87171; /* Lighter red for better dark mode contrast */
 
     /* --- Scrollbars --- */
     --scrollbar-track: var(--bg-main);
@@ -77,6 +79,7 @@
   --accent-blue: #4d7cfe;
   --accent-blue-soft: #a6bfff;
   --accent-purple: #7065f0;
+  --accent-danger: #ef4444;
 
   --border-subtle: #e6e8ec;
   --badge-bg: #f2f4f7;
@@ -102,6 +105,7 @@
 
   --accent-lime: #c6f432;
   --accent-blue: #5e89ff;
+  --accent-danger: #f87171;
 
   --scrollbar-track: var(--bg-main);
   --scrollbar-thumb: var(--border-subtle);
