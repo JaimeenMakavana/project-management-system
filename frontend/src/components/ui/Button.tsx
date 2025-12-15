@@ -25,7 +25,8 @@ export function Button({
       'border-2 border-[var(--border-subtle)] text-[var(--text-secondary)] hover:bg-[var(--badge-bg)] focus:ring-[var(--border-subtle)]',
     ghost:
       'text-[var(--text-secondary)] hover:bg-[var(--badge-bg)] focus:ring-[var(--border-subtle)]',
-    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-600',
+    danger:
+      'bg-[var(--accent-danger)] text-[var(--text-inverse)] hover:bg-[var(--accent-danger)]/90 focus:ring-[var(--accent-danger)]',
   };
   
   const sizes = {
