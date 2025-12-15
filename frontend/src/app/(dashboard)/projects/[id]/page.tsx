@@ -6,14 +6,15 @@ import { Header } from "@/components/layout/Header";
 import { GET_PROJECT } from "@/graphql/queries";
 import { DELETE_TASK } from "@/graphql/mutations";
 import { ProjectStats } from "@/components/features/projects/ProjectStats";
-import { TaskBoard } from "@/components/features/tasks/TaskBoard";
+import { TaskTable } from "@/components/features/tasks/TaskTable";
 import { Modal } from "@/components/ui/Modal";
 import { TaskForm } from "@/components/features/tasks/TaskForm";
 import { CommentSection } from "@/components/features/tasks/CommentSection";
 import { LoadingPage } from "@/components/ui/Loading";
 import { Button } from "@/components/ui/Button";
 import { StatusBadge, PriorityBadge } from "@/components/ui/Badge";
-import { Task } from "@/graphql/types";
+import type { Task, TaskStatus, TaskPriority } from "@/graphql/types";
+import { Pencil, Trash2 } from "lucide-react";
 
 export default function ProjectDetailPage({
   params,
@@ -23,6 +24,10 @@ export default function ProjectDetailPage({
   const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<TaskStatus | "ALL">("ALL");
+  const [priorityFilter, setPriorityFilter] = useState<TaskPriority | "ALL">(
+    "ALL"
+  );
 
   const resolvedParams = use(params);
   const projectId = parseInt(resolvedParams.id);
@@ -84,8 +89,17 @@ export default function ProjectDetailPage({
     }
   };
 
+  const allTasks = project.tasks || [];
+  const filteredTasks = allTasks.filter((task: Task) => {
+    const matchesStatus =
+      statusFilter === "ALL" || task.status === statusFilter;
+    const matchesPriority =
+      priorityFilter === "ALL" || task.priority === priorityFilter;
+    return matchesStatus && matchesPriority;
+  });
+
   return (
-    <div>
+    <div className="relative">
       <Header
         title={project.name}
         subtitle={project.description}
@@ -97,7 +111,7 @@ export default function ProjectDetailPage({
         }
       />
 
-      <div className="p-8 space-y-6">
+      <div className="p-4 space-y-6">
         {/* Statistics */}
         <ProjectStats
           totalTasks={project.taskCount}
@@ -109,9 +123,39 @@ export default function ProjectDetailPage({
 
         {/* Task Board */}
         <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Tasks</h2>
-          <TaskBoard
-            tasks={project.tasks || []}
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-xl font-semibold text-gray-900">Tasks</h2>
+            <div className="flex flex-wrap gap-2">
+              <select
+                value={statusFilter}
+                onChange={(e) =>
+                  setStatusFilter(e.target.value as TaskStatus | "ALL")
+                }
+                className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              >
+                <option value="ALL">All Statuses</option>
+                <option value="TODO">To Do</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="DONE">Done</option>
+                <option value="BLOCKED">Blocked</option>
+              </select>
+              <select
+                value={priorityFilter}
+                onChange={(e) =>
+                  setPriorityFilter(e.target.value as TaskPriority | "ALL")
+                }
+                className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              >
+                <option value="ALL">All Priorities</option>
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+                <option value="URGENT">Urgent</option>
+              </select>
+            </div>
+          </div>
+          <TaskTable
+            tasks={filteredTasks}
             onTaskClick={(task) => {
               setSelectedTask(task);
               setIsEditMode(false);
@@ -152,25 +196,13 @@ export default function ProjectDetailPage({
           ) : (
             <div className="space-y-4">
               {/* Action Buttons */}
-              <div className="flex justify-end space-x-2 pb-2 border-b">
+              <div className="flex flex-wrap justify-end gap-2 pb-2 border-b">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setIsEditMode(true)}
                 >
-                  <svg
-                    className="w-4 h-4 mr-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                    />
-                  </svg>
+                  <Pencil className="w-4 h-4 mr-1" strokeWidth={1} />
                   Edit
                 </Button>
                 <Button
@@ -179,19 +211,7 @@ export default function ProjectDetailPage({
                   onClick={handleDeleteTask}
                   disabled={deleting}
                 >
-                  <svg
-                    className="w-4 h-4 mr-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                    />
-                  </svg>
+                  <Trash2 className="w-4 h-4 mr-1" strokeWidth={1} />
                   {deleting ? "Deleting..." : "Delete"}
                 </Button>
               </div>

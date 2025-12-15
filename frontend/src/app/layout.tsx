@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ApolloProviderWrapper } from "@/lib/apollo-provider";
-import { AuthProvider } from "@/lib/auth-context";
 
 export const metadata: Metadata = {
   title: "Project Management System",
@@ -15,10 +14,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">
-        <ApolloProviderWrapper>
-          <AuthProvider>{children}</AuthProvider>
-        </ApolloProviderWrapper>
+      <body className="antialiased h-dvh">
+        <ApolloProviderWrapper>{children}</ApolloProviderWrapper>
       </body>
     </html>
   );
