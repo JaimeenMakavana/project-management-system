@@ -16,7 +16,7 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-[var(--bg-card-dark)] rounded-lg flex items-center justify-center">
               <LayoutDashboard
-                className="w-6 h-6 text-[var(--text-inverse)]"
+                className="w-6 h-6 text-[var(--text-primary)]"
                 strokeWidth={1}
               />
             </div>

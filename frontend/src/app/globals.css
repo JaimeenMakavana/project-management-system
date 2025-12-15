@@ -23,6 +23,11 @@
   /* --- UI Elements --- */
   --border-subtle: #e6e8ec; /* Light borders around cards or inputs */
   --badge-bg: #f2f4f7; /* Background for small pills/badges like 'All 10,540' */
+
+  /* --- Scrollbars --- */
+  --scrollbar-track: var(--bg-main);
+  --scrollbar-thumb: var(--border-subtle);
+  --scrollbar-thumb-hover: var(--accent-blue-soft);
 }
 
 /* Respect system preference when no explicit theme is chosen */
@@ -50,6 +55,11 @@
     --accent-lime: #c6f432;
     /* Blue slightly lightened to ensure readability against black */
     --accent-blue: #5e89ff;
+
+    /* --- Scrollbars --- */
+    --scrollbar-track: var(--bg-main);
+    --scrollbar-thumb: var(--border-subtle);
+    --scrollbar-thumb-hover: var(--accent-blue);
   }
 }
 
@@ -70,6 +80,10 @@
 
   --border-subtle: #e6e8ec;
   --badge-bg: #f2f4f7;
+
+  --scrollbar-track: var(--bg-main);
+  --scrollbar-thumb: var(--border-subtle);
+  --scrollbar-thumb-hover: var(--accent-blue-soft);
 }
 
 :root[data-theme="dark"] {
@@ -88,6 +102,35 @@
 
   --accent-lime: #c6f432;
   --accent-blue: #5e89ff;
+
+  --scrollbar-track: var(--bg-main);
+  --scrollbar-thumb: var(--border-subtle);
+  --scrollbar-thumb-hover: var(--accent-blue);
+}
+
+/* Global scrollbar styles using design tokens */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 999px;
+  border: 2px solid var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
 }
 
 @layer utilities {

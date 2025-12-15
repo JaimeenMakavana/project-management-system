@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { Header } from "@/components/layout/Header";
-import { GET_TASKS } from "@/graphql/queries";
+import { GET_TASKS, GET_PROJECTS } from "@/graphql/queries";
 import { DELETE_TASK } from "@/graphql/mutations";
 import { TaskTable } from "@/components/features/tasks/TaskTable";
 import { Modal } from "@/components/ui/Modal";
@@ -12,7 +12,7 @@ import { CommentSection } from "@/components/features/tasks/CommentSection";
 import { Loading, LoadingPage } from "@/components/ui/Loading";
 import { StatusBadge, PriorityBadge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import type { Task, TaskStatus, TaskPriority } from "@/graphql/types";
+import type { Task, TaskStatus, TaskPriority, Project } from "@/graphql/types";
 import { Input } from "@/components/ui/Input";
 import { useOrganization } from "@/hooks/useOrganization";
 import { Pencil, Trash2 } from "lucide-react";
@@ -25,11 +25,21 @@ export default function TasksPage() {
   const [priorityFilter, setPriorityFilter] = useState<TaskPriority | "ALL">(
     "ALL"
   );
+  const [projectFilter, setProjectFilter] = useState<number | null>(null);
   const { organizationId, loading: orgLoading } = useOrganization();
+
+  // Fetch projects for the filter dropdown
+  const { data: projectsData } = useQuery(GET_PROJECTS, {
+    variables: {
+      organizationId,
+    },
+    skip: !organizationId,
+  });
 
   const { data, loading, error, refetch } = useQuery(GET_TASKS, {
     variables: {
       organizationId,
+      projectId: projectFilter || null,
       assigneeEmail: emailFilter || null,
     },
     skip: !organizationId,
@@ -118,6 +128,22 @@ export default function TasksPage() {
             />
           </div>
           <div className="flex flex-wrap gap-2">
+            <select
+              value={projectFilter || "ALL"}
+              onChange={(e) =>
+                setProjectFilter(
+                  e.target.value === "ALL" ? null : parseInt(e.target.value)
+                )
+              }
+              className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-card)] px-3 py-2 text-sm text-[var(--text-secondary)] shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] focus:border-[var(--accent-blue)]"
+            >
+              <option value="ALL">All Projects</option>
+              {projectsData?.projects?.map((project: Project) => (
+                <option key={project.id} value={project.id}>
+                  {project.name}
+                </option>
+              ))}
+            </select>
             <select
               value={statusFilter}
               onChange={(e) =>

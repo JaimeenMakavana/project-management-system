@@ -101,10 +101,10 @@ export default function ProjectDetailPage({
   return (
     <div className="relative">
       <Header
-        title={project.name}
+        title={project?.name}
         subtitle={project.description}
         actions={
-          <div className="flex items-center space-x-3">
+          <div className="flex justify-end items-center space-x-2">
             <StatusBadge status={project.status} />
             <Button onClick={() => setIsCreateTaskOpen(true)}>Add Task</Button>
           </div>

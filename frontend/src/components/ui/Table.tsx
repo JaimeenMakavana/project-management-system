@@ -3,18 +3,26 @@ import { cn } from "@/lib/utils";
 
 const Table = React.forwardRef<
   HTMLTableElement,
-  React.HTMLAttributes<HTMLTableElement>
->(function Table({ className, ...props }, ref) {
+  React.HTMLAttributes<HTMLTableElement> & { scrollable?: boolean }
+>(function Table({ className, scrollable, ...props }, ref) {
+  const tableElement = (
+    <table
+      ref={ref}
+      className={cn(
+        "w-full border-collapse text-left text-sm text-[var(--text-secondary)]",
+        className
+      )}
+      {...props}
+    />
+  );
+
+  if (scrollable) {
+    return <>{tableElement}</>;
+  }
+
   return (
     <div className="w-full overflow-x-auto rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-card)] shadow-sm">
-      <table
-        ref={ref}
-        className={cn(
-          "w-full border-collapse text-left text-sm text-[var(--text-secondary)]",
-          className
-        )}
-        {...props}
-      />
+      {tableElement}
     </div>
   );
 });

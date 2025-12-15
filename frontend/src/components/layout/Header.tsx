@@ -16,17 +16,17 @@ interface HeaderProps {
 export function Header({ title, subtitle, actions }: HeaderProps) {
   return (
     <TooltipProvider>
-      <div className="bg-[var(--bg-card)] border-b border-[var(--border-subtle)] px-4 py-3 sticky top-0 z-10 h-[65px] flex items-center w-full">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between w-full">
-          <div className="min-w-0">
-            <h1 className="text-lg md:text-xl font-bold text-[var(--text-primary)] break-words">
-              {title}{" "}
+      <div className="bg-[var(--bg-card)] border-b border-[var(--border-subtle)] px-4 py-3 sticky top-0 z-10 flex items-center w-full">
+        <div className="flex gap-3 md:gap-4 items-center justify-between w-full min-w-0">
+          <div className="min-w-0 flex-1 overflow-hidden">
+            <h1 className="text-base md:text-lg lg:text-xl font-bold text-[var(--text-primary)] flex flex-wrap items-center gap-2">
+              <span className="truncate">{title}</span>
               {subtitle && (
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1 rounded-full bg-[var(--badge-bg)] px-2.5 py-1 text-xs font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-main)]"
+                      className="inline-flex items-center gap-1 rounded-full bg-[var(--badge-bg)] px-2.5 py-1 text-xs font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-main)] flex-shrink-0"
                     >
                       <span className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-[var(--border-subtle)] text-[10px] text-[var(--text-primary)]">
                         i
@@ -41,8 +41,8 @@ export function Header({ title, subtitle, actions }: HeaderProps) {
               )}
             </h1>
           </div>
-          <div className="flex flex-wrap items-center gap-2 md:gap-3">
-            {actions}
+          <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+            {actions && <div className="hidden sm:block">{actions}</div>}
             <ThemeToggle />
           </div>
         </div>

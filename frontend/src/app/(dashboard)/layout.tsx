@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { LayoutDashboard } from "lucide-react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
@@ -16,9 +17,10 @@ export default function DashboardLayout({
         <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between bg-[var(--bg-card)] border-b border-[var(--border-subtle)] px-4 py-3 md:hidden">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 rounded-lg bg-[var(--bg-card-dark)] flex items-center justify-center">
-              <span className="text-sm font-bold text-[var(--text-inverse)]">
-                PM
-              </span>
+              <LayoutDashboard
+                className="w-5 h-5 text-[var(--text-primary)]"
+                strokeWidth={1}
+              />
             </div>
             <span className="text-base font-semibold text-[var(--text-primary)]">
               Dashboard
