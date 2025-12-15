@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Default (light) theme */
 :root {
   /* --- Base Surfaces --- */
   --bg-main: #f8f9fb; /* Light grey background behind all cards */
@@ -24,6 +25,7 @@
   --badge-bg: #f2f4f7; /* Background for small pills/badges like 'All 10,540' */
 }
 
+/* Respect system preference when no explicit theme is chosen */
 @media (prefers-color-scheme: dark) {
   :root {
     /* --- Base Surfaces --- */
@@ -49,6 +51,43 @@
     /* Blue slightly lightened to ensure readability against black */
     --accent-blue: #5e89ff;
   }
+}
+
+/* Explicit theme overrides via data-theme on <html> */
+:root[data-theme="light"] {
+  --bg-main: #f8f9fb;
+  --bg-card: #ffffff;
+  --bg-card-dark: #121214;
+
+  --text-primary: #121214;
+  --text-secondary: #8d9095;
+  --text-inverse: #ffffff;
+
+  --accent-lime: #c6f432;
+  --accent-blue: #4d7cfe;
+  --accent-blue-soft: #a6bfff;
+  --accent-purple: #7065f0;
+
+  --border-subtle: #e6e8ec;
+  --badge-bg: #f2f4f7;
+}
+
+:root[data-theme="dark"] {
+  --bg-main: #050505;
+  --bg-card: #121214;
+  --bg-card-hover: #1c1c1f;
+
+  --text-primary: #ffffff;
+  --text-secondary: #94969c;
+  --text-inverse: #121214;
+
+  --border-subtle: #27272a;
+  --badge-bg: #1f1f23;
+
+  --grid-line: #2a2a2e;
+
+  --accent-lime: #c6f432;
+  --accent-blue: #5e89ff;
 }
 
 @layer utilities {

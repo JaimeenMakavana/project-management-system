@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ApolloProviderWrapper } from "@/lib/apollo-provider";
+import { ThemeProvider } from "@/lib/theme-context";
 import { Red_Hat_Display } from "next/font/google";
 
 const redHatDisplay = Red_Hat_Display({
@@ -19,9 +20,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${redHatDisplay.className} antialiased h-dvh`}>
-        <ApolloProviderWrapper>{children}</ApolloProviderWrapper>
+        <ThemeProvider>
+          <ApolloProviderWrapper>{children}</ApolloProviderWrapper>
+        </ThemeProvider>
       </body>
     </html>
   );

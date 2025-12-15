@@ -5,6 +5,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 interface HeaderProps {
   title: string;
@@ -15,8 +16,8 @@ interface HeaderProps {
 export function Header({ title, subtitle, actions }: HeaderProps) {
   return (
     <TooltipProvider>
-      <div className="bg-[var(--bg-card)] border-b border-[var(--border-subtle)] px-4 py-3 sticky top-0 z-10 h-[65px] flex items-center">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="bg-[var(--bg-card)] border-b border-[var(--border-subtle)] px-4 py-3 sticky top-0 z-10 h-[65px] flex items-center w-full">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between w-full">
           <div className="min-w-0">
             <h1 className="text-lg md:text-xl font-bold text-[var(--text-primary)] break-words">
               {title}{" "}
@@ -40,11 +41,10 @@ export function Header({ title, subtitle, actions }: HeaderProps) {
               )}
             </h1>
           </div>
-          {actions && (
-            <div className="flex flex-wrap items-center gap-2 md:gap-3">
-              {actions}
-            </div>
-          )}
+          <div className="flex flex-wrap items-center gap-2 md:gap-3">
+            {actions}
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </TooltipProvider>
