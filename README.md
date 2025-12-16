@@ -13,9 +13,9 @@ A **complete full-stack** project management tool with modern technologies.
 - **PostgreSQL 14+** (installed and running locally)
 - Git
 
-## 🚀 Quick Start (10 minutes)
+## 🚀 Quick Start
 
-### Step 1: Database Setup (2 minutes)
+### Step 1: Database Setup
 
 ```bash
 # Create PostgreSQL database
@@ -28,7 +28,7 @@ GRANT ALL PRIVILEGES ON DATABASE project_management_db TO pm_user;
 \q
 ```
 
-### Step 2: Backend Setup (4 minutes)
+### Step 2: Backend Setup
 
 ```bash
 cd backend
@@ -69,7 +69,7 @@ python manage.py runserver
 - GraphQL API: http://localhost:8000/graphql
 - Admin Panel: http://localhost:8000/admin
 
-### Step 3: Frontend Setup (3 minutes)
+### Step 3: Frontend Setup 
 
 Open a **new terminal**:
 
